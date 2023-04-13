@@ -27,9 +27,9 @@ public class Rat : MonoBehaviour
 
 	//Note(Francisco): These fields are for ground-checks
 	private bool is_grounded = false;
-	private float ground_square_height = 0.3f;
+	private float ground_square_height = 0.08f;
 	private Vector2 ground_square_check;
-	private float ground_interval = 4.0f;
+	private float ground_interval = 0.55f;
 	public LayerMask ground;
 	private Transform transform_position_local;
 	private Vector2 ground_center;
@@ -44,9 +44,9 @@ public class Rat : MonoBehaviour
 		decceleration = 1 / (( (1/Time.fixedDeltaTime) * decceleration_time) / max_speed);
 
 		// Note(Francisco): Initialize ground stuff!
-		ground_square_check = new Vector2(ground_interval*2, ground_square_height);
+		ground_square_check = new Vector2(ground_interval, ground_square_height);
 		transform_position_local = transform.GetChild(0);
-		ground_center = transform_position_local.TransformPoint(transform_position_local.position);
+		ground_center = transform_position_local.position;
 
 		sprite_renderer = GetComponent<SpriteRenderer>();
 		body = GetComponent<Rigidbody2D>();
@@ -57,7 +57,7 @@ public class Rat : MonoBehaviour
     {
 		//Note(Harrison) Added bool to if statements to make sure rat is alive
 		//Note(Francisco): Physics2D and Physics DO NOT INTERACT WITH EACH OTHER
-		ground_center = transform_position_local.TransformPoint(transform_position_local.position);
+		ground_center = transform_position_local.position;
 
 		// Check if one of the three is hit
 		if( Physics2D.OverlapBox(ground_center, ground_square_check, 0, ground))
@@ -68,7 +68,7 @@ public class Rat : MonoBehaviour
 		{ sprite_renderer.flipX = !sprite_renderer.flipX; }
 
 		// Note(Francisco): jump if on gruond and pressed jump
-		if(Input.GetButtonDown("Jump") && is_grounded && body.velocity.y == 0 && canMove) {
+		if(Input.GetButtonDown("Jump") && is_grounded && (body.velocity.y >= -0.01f && body.velocity.y <= 0.01f) && canMove) {
 			body.AddForce(Vector2.up * 9.8f * jump_height, ForceMode2D.Force);
 		}
 
