@@ -44,9 +44,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: UI
-    uniqueID: 3544906973
-    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 161301087
+    locked: 0
+  - name: UI
+    uniqueID: 3544906973
     locked: 0

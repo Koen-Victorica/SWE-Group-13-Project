@@ -23,7 +23,6 @@ public class Rat : MonoBehaviour
 	//variables added by harrison
 	//private int score = 0; NOTE(Charles) do not need
 	private BoxCollider2D bc;
-	private bool canMove = true; //NOTE(Charles) could change to "isAlive"
 
 	//Note(Francisco): These fields are for ground-checks
 	private bool is_grounded = false;
@@ -77,11 +76,11 @@ public class Rat : MonoBehaviour
 			{ is_grounded = true; } else { is_grounded = false; }
 
 		inputs = new Vector2(Input.GetAxis("Horizontal"), 0);
-		if( (!sprite_renderer.flipX && (inputs.x < 0) ) || (sprite_renderer.flipX && (inputs.x > 0) ) && canMove)
+		if( (!sprite_renderer.flipX && (inputs.x < 0) ) || (sprite_renderer.flipX && (inputs.x > 0) ) )
 		{ sprite_renderer.flipX = !sprite_renderer.flipX; }
 
 		// Note(Francisco): jump if on gruond and pressed jump
-		if(Input.GetButtonDown("Jump") && is_grounded && (body.velocity.y >= -0.01f && body.velocity.y <= 0.01f) && canMove) {
+		if(Input.GetButtonDown("Jump") && is_grounded && (body.velocity.y >= -0.01f && body.velocity.y <= 0.01f) ) {
 			body.AddForce(Vector2.up * 9.8f * jump_height, ForceMode2D.Force);
 		}
 
@@ -90,29 +89,26 @@ public class Rat : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		//checks to make sure rat is alive before moving
-		if (canMove)
-		{
-			acceleration = 1 / (((1 / Time.fixedDeltaTime) * acceleration_time) / max_speed);
-			decceleration = 1 / (((1 / Time.fixedDeltaTime) * decceleration_time) / max_speed);
+        //checks to make sure rat is alive before moving
+        acceleration = 1 / (((1 / Time.fixedDeltaTime) * acceleration_time) / max_speed);
+        decceleration = 1 / (((1 / Time.fixedDeltaTime) * decceleration_time) / max_speed);
 
-			// get the max speed
-			float target_speed = inputs.x * max_speed;
-			// get the difference in speed at the current step
-			float speed_difference = target_speed - body.velocity.x;
-			// determine if accelerating or deccelerating
-			float acceleration_rate = (Mathf.Abs(target_speed) > 0.01f) ? acceleration : decceleration;
+        // get the max speed
+        float target_speed = inputs.x * max_speed;
+        // get the difference in speed at the current step
+        float speed_difference = target_speed - body.velocity.x;
+        // determine if accelerating or deccelerating
+        float acceleration_rate = (Mathf.Abs(target_speed) > 0.01f) ? acceleration : decceleration;
 
-			float movement = speed_difference * acceleration_rate;
-			body.AddForce(movement * Vector2.right, ForceMode2D.Force);
-		}
+        float movement = speed_difference * acceleration_rate;
+        body.AddForce(movement * Vector2.right, ForceMode2D.Force);
 	}
 
 	void OnCollisionEnter2D(Collision2D collision)
 	{
 		if(collision.gameObject.tag == "Spike")
 		{
-			canMove = false; //NOTE(Charles) not necessary, can use "body.gameObject.SetActive(False);", this is up to ya'll.
+			body.gameObject.SetActive(false); //NOTE(Charles) not necessary, can use "body.gameObject.SetActive(False);", this is up to ya'll.
 			//ui.GetComponent<CanvasController>().lose();  NOTE(Charles) do not need anymore
 
 			//NOTE(charles): the death screen and score input will now display for the user input their score
@@ -135,6 +131,7 @@ public class Rat : MonoBehaviour
 		}
 		if (collision.gameObject.tag == "Flag")
 		{
+            body.gameObject.SetActive(false);
 			//ui.GetComponent<CanvasController>().win(); NOTe(Charles) do not need anymore
 
 			//NOTE(charles): the win screen and score input will now display for the user input their score
