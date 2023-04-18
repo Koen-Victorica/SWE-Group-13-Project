@@ -11,7 +11,7 @@ public class Rat : MonoBehaviour
 	public float acceleration_time = 2.0f;
 	public float decceleration_time = 2.0f;
 
-	public Canvas ui;
+	//public Canvas ui; NOTE(Charles): do not need
 
 	//Note(Francisco): These fields will be needed for acceleratoin
 	private SpriteRenderer sprite_renderer;
@@ -21,9 +21,9 @@ public class Rat : MonoBehaviour
 	private Rigidbody2D body;
 
 	//variables added by harrison
-	private int score = 0;
+	//private int score = 0; NOTE(Charles) do not need
 	private BoxCollider2D bc;
-	private bool canMove = true;
+	private bool canMove = true; //NOTE(Charles) could change to "isAlive"
 
 	//Note(Francisco): These fields are for ground-checks
 	private bool is_grounded = false;
@@ -34,7 +34,20 @@ public class Rat : MonoBehaviour
 	private Transform transform_position_local;
 	private Vector2 ground_center;
 
-	//Note(Francisco): Important init. for ground distance and a transform for ground checking
+	//Note(Charles): variables for UI to work
+	public GameObject deathScreen;
+	public GameObject WinScreen;
+	public GameObject HighScoreInput;
+
+    //Note(Charles): added awake method to ensure death/win screens are set inactive
+    private void Awake()
+    {
+		deathScreen.SetActive(false);
+		WinScreen.SetActive(false);
+		HighScoreInput.SetActive(false);
+    }
+
+    //Note(Francisco): Important init. for ground distance and a transform for ground checking
     void Start()
     {
 		bc = GetComponent<BoxCollider2D>();
@@ -99,8 +112,12 @@ public class Rat : MonoBehaviour
 	{
 		if(collision.gameObject.tag == "Spike")
 		{
-			canMove = false;
-            ui.GetComponent<CanvasController>().lose();
+			canMove = false; //NOTE(Charles) not necessary, can use "body.gameObject.SetActive(False);", this is up to ya'll.
+			//ui.GetComponent<CanvasController>().lose();  NOTE(Charles) do not need anymore
+
+			//NOTE(charles): the death screen and score input will now display for the user input their score
+			deathScreen.SetActive(true);
+			HighScoreInput.SetActive(true);
         }
 	}
 
@@ -108,13 +125,21 @@ public class Rat : MonoBehaviour
     {
         if (collision.gameObject.tag == "Cheese")
         {
-            score++;
-            ui.GetComponent<CanvasController>().UpdateScore(score);
-            Destroy(collision.gameObject);
-        }
-		if(collision.gameObject.tag == "Flag")
+			//score++; NOTE(Charles) do not need
+			//ui.GetComponent<CanvasController>().UpdateScore(score); NOTE(Charles) do not need
+			Destroy(collision.gameObject);
+
+			//NOTE(Charles) scoring system
+			ScoreBoss.instance.AddPoint();
+
+		}
+		if (collision.gameObject.tag == "Flag")
 		{
-            ui.GetComponent<CanvasController>().win();
-        }
+			//ui.GetComponent<CanvasController>().win(); NOTe(Charles) do not need anymore
+
+			//NOTE(charles): the win screen and score input will now display for the user input their score
+			WinScreen.SetActive(true);
+			HighScoreInput.SetActive(true);
+		}
     }
 }
