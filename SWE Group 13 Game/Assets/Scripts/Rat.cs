@@ -84,6 +84,15 @@ public class Rat : MonoBehaviour
 			body.AddForce(Vector2.up * 9.8f * jump_height, ForceMode2D.Force);
 		}
 
+		//check if rat has fallen off the stage
+		if(transform.position.y < -5)
+		{
+			body.gameObject.SetActive(false);
+
+			
+			deathScreen.SetActive(true);
+			HighScoreInput.SetActive(true);
+		}
 		//Debug.Log(body.velocity.y);
     }
 
