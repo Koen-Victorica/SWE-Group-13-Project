@@ -81,6 +81,8 @@ public class Rat : MonoBehaviour
 
 		// Note(Francisco): jump if on gruond and pressed jump
 		if(Input.GetButtonDown("Jump") && is_grounded && (body.velocity.y >= -0.01f && body.velocity.y <= 0.01f) ) {
+            FindObjectOfType<AudioManager>().Play("PlayerJump"); 
+			
 			body.AddForce(Vector2.up * 9.8f * jump_height, ForceMode2D.Force);
 		}
 
@@ -117,6 +119,8 @@ public class Rat : MonoBehaviour
 	{
 		if(collision.gameObject.tag == "Spike")
 		{
+			FindObjectOfType<AudioManager>().Play("PlayerDeath");
+
 			body.gameObject.SetActive(false); //NOTE(Charles) not necessary, can use "body.gameObject.SetActive(False);", this is up to ya'll.
 			//ui.GetComponent<CanvasController>().lose();  NOTE(Charles) do not need anymore
 
@@ -130,9 +134,11 @@ public class Rat : MonoBehaviour
     {
         if (collision.gameObject.tag == "Cheese")
         {
-			//score++; NOTE(Charles) do not need
-			//ui.GetComponent<CanvasController>().UpdateScore(score); NOTE(Charles) do not need
-			Destroy(collision.gameObject);
+            FindObjectOfType<AudioManager>().Play("PlayerCollect");
+
+            //score++; NOTE(Charles) do not need
+            //ui.GetComponent<CanvasController>().UpdateScore(score); NOTE(Charles) do not need
+            Destroy(collision.gameObject);
 
 			//NOTE(Charles) scoring system
 			ScoreBoss.instance.AddPoint();
@@ -140,6 +146,8 @@ public class Rat : MonoBehaviour
 		}
 		if (collision.gameObject.tag == "Flag")
 		{
+			FindObjectOfType<AudioManager>().Play("PlayerWin");
+
             body.gameObject.SetActive(false);
 			//ui.GetComponent<CanvasController>().win(); NOTe(Charles) do not need anymore
 
