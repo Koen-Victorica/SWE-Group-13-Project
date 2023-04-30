@@ -1,8 +1,2 @@
-bob 6
-me 3
 test 1
-test2 2
-phill 1
-hhv 8
-hhv 8
-SV 7
+charles 1
